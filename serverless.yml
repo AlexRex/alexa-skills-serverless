@@ -1,0 +1,72 @@
+service: aws-node-alexa-skill
+
+plugins:
+  - serverless-alexa-skills
+
+custom:
+  skillName: My Health
+  alexa:
+    vendorId: nope
+    clientId: nope
+    clientSecret: nope
+    skills:
+      - id: amzn1.ask.skill.fd64f0a3-298e-43e5-bce3-58862dbf0c59
+        manifest:
+          publishingInformation:
+            locales:
+              en-US:
+                name: ${self:custom.skillName}
+          apis:
+            custom: 
+              endpoint:
+                uri: arn:aws:lambda:eu-west-1:731778311494:function:aws-node-alexa-skill-dev-healthHandler
+          manifestVersion: '1.0'
+        models:
+          en-US:
+            interactionModel:
+              languageModel:
+                invocationName: how is my health
+                intents:
+                  - name: AMAZON.HelpIntent
+                    samples: 
+                    - 'help'
+                  - name: AMAZON.CancelIntent
+                    samples: 
+                    - 'cancel'
+                  - name: AMAZON.StopIntent
+                    samples: 
+                    - 'stop'
+                  - name: ${self:provider.environment.HEALTH_INTENT}
+                    samples:
+                      - 'give me my last health records'
+                  - name: ${self:provider.environment.FOOD_INTENT}
+                    slots:
+                    - name: when
+                      type: AMAZON.DATE
+                    - name: food
+                      type: AMAZON.Food
+                    - name: exercise
+                      type: AMAZON.Sport
+                    samples:
+                      - 'I had {food} {when} how much do I have to {exercise}'
+                      - 'I had {food} on {when} how much do I have to {exercise}'
+                      - 'I had {food} how much do I have to {exercise}'
+                      - 'I had {food}'
+                      - '{when} I had {food}'
+                      - 'If I eat {food} how much do I have to {exercise}'
+        
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: eu-west-1
+  profile: serverless-admin
+  environment: 
+    SKILL_NAME: ${self:custom.skillName}
+    HEALTH_INTENT: myHealth
+    FOOD_INTENT: iAteFood
+
+functions:
+  healthHandler:
+    handler: handler.handler
+    events:
+      - alexaSkill: amzn1.ask.skill.fd64f0a3-298e-43e5-bce3-58862dbf0c59

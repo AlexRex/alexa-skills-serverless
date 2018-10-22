@@ -1,0 +1,22 @@
+{
+  "name": "aws-alexa-skill",
+  "version": "1.0.0",
+  "description": "Calling alexa skills.",
+  "author": "Alex Torres <aletormat@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "sls:deploy": "sls deploy",
+    "alexa:deploy": "sls alexa update && sls alexa build",
+    "alexa:create": "sls alexa create --name 'My Health' --locale en-US --type custom"
+  },
+  "dependencies": {
+    "ask-sdk-core": "^2.0.7",
+    "ask-sdk-model": "^1.4.1",
+    "axios": "^0.18.0",
+    "funfun": "file:../../../fp/dontFearTheMonad",
+    "node-fetch": "^2.2.0"
+  },
+  "devDependencies": {
+    "serverless-alexa-skills": "^0.1.0"
+  }
+}
